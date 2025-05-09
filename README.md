@@ -2,7 +2,7 @@
 
 ## Introduction
 
-UnattendedWinstall leverages Microsoft's [Answer Files](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/update-windows-settings-and-scripts-create-your-own-answer-file-sxs?view=windows-11) (or Unattend files) to automate and customize Windows installations. It enables modifications to Windows Settings and Packages directly in the Windows ISO during setup.
+UnattendedWinstall leverages Microsoft's [Answer Files](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/update-windows-settings-and-scripts-create-your-own-answer-file-sxs?view=windows-11) (or Unattend files) to automate and customize Windows installations. </br> It enables modifications to Windows Settings and Packages directly in the Windows ISO during setup.
 
 ### Why Use an Answer File?
 
@@ -19,18 +19,23 @@ UnattendedWinstall leverages Microsoft's [Answer Files](https://learn.microsoft.
 > [!NOTE] 
 > UnattendedWinstall has been tested and optimized for personal use. For those interested in customizing further, [create your own answer file](https://schneegans.de/windows/unattend-generator/) following [this video guide](https://youtu.be/WyLiJl-NQU8).
 
+### Versions
+
+[![Version 2 Release (Latest)](https://img.shields.io/badge/Version-2.1.0%20Latest-0078D4?style=for-the-badge&logo=github&logoColor=white)](https://github.com/memstechtips/UnattendedWinstall/releases/tag/v2.1.0)
+[![Version 1 Release](https://img.shields.io/badge/Version-1.0.0-FFA500?style=for-the-badge&logo=github&logoColor=white)](https://github.com/memstechtips/UnattendedWinstall/releases/tag/v1.0.0)
+
 ### Support the Project
 
 If UnattendedWinstall has been useful to you, consider supporting the project, it really does help!
 
-[![Support via PayPal](https://img.shields.io/badge/Support-via%20PayPal-yellow?logo=paypal)](https://paypal.me/memstech)
+[![Support via PayPal](https://img.shields.io/badge/Support-via%20PayPal-FFD700?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/memstech)
 
 ### Feedback and Community
 
 If you have feedback, suggestions, or need help with UnattendedWinstall, please feel free to join the discussion on GitHub or our Discord community:
 
-[![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-blue?logo=github&logoColor=white)](https://github.com/memstechtips/UnattendedWinstall/discussions)
-[![Join Discord Community](https://img.shields.io/badge/Join-Discord%20Community-5865F2?logo=discord&logoColor=white)](https://www.discord.gg/zWGANV8QAX)
+[![Join the Discussion](https://img.shields.io/badge/Join-the%20Discussion-2D9F2D?style=for-the-badge&logo=github&logoColor=white)](https://github.com/memstechtips/UnattendedWinstall/discussions)
+[![Join Discord Community](https://img.shields.io/badge/Join-Discord%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://www.discord.gg/zWGANV8QAX)
 
 ## Requirements
 
@@ -40,7 +45,7 @@ If you have feedback, suggestions, or need help with UnattendedWinstall, please 
 
 ## What Does UnattendedWinstall Do?
 
-The UnattendedWinstall answer file come with detailed descriptions for nearly all configurations and registry tweaks, which are available for inspection here on GitHub. For customization, download the answer file and open it in editors like [Cursor](https://www.cursor.com/) or [VSCode](https://code.visualstudio.com/).
+The UnattendedWinstall answer file comes with detailed descriptions for nearly all configurations and registry tweaks, which are available for inspection here on GitHub. For customization, download the answer file and open it in editors like [Cursor](https://www.cursor.com/) or [VSCode](https://code.visualstudio.com/).
 
 ### Sources and Contributions
 
@@ -62,7 +67,7 @@ The UnattendedWinstall answer file come with detailed descriptions for nearly al
 
 ### Key Features
 
-- Windows 10/11 Pro is installed by default
+- Ability to choose Windows Edition (Pro is not enforced anymore as in v2.0.0)
 - Bypasses Windows 11 system requirements
 - Disables Windows Defender services by default
   - *prompted to enable after Windows installation*
@@ -91,7 +96,7 @@ The UnattendedWinstall answer file come with detailed descriptions for nearly al
 > Ensure you open PowerShell as an administrator. Additionally, set the execution policy to allow script execution by running the following command:
 >
 > ```powershell
-> Set-ExecutionPolicy RemoteSigned
+> Set-ExecutionPolicy Unrestricted
 > ```
 >
 > Running PowerShell with elevated permissions and enabling script execution will ensure that `UWScript.ps1` can apply the necessary system changes.
@@ -100,32 +105,45 @@ The UnattendedWinstall answer file come with detailed descriptions for nearly al
 
 To use an answer file, include `autounattend.xml` at the root of your Windows Installation Media to be executed during Windows setup.
 
-> [!NOTE]  
+> [!IMPORTANT]  
 > Ensure the answer file is named `autounattend.xml`; otherwise, it won’t be recognized by the installer.
 
-> [!NOTE] 
-> You can back up your drivers prior to installation to ensure they’re readily available:
->
-> <details>
->   <summary>Click to Show Instructions</summary>
->
-> 1. **Create a folder named `Drivers` on your C: drive.**
->
-> 2. **Backup your current Windows drivers to the `C:` drive** by running the following command in Command Prompt as Administrator:
->
->      ```bash
->      dism /online /export-driver /destination:C:\Drivers
->      ```
->
-> 3. **Plug your USB drive/installation media into your computer.**
->
-> 4. **Create a folder named `$WinpeDriver$` on your USB drive.**
->
-> 5. **Copy the drivers you want to install automatically** from `C:\Drivers` to `D:\$WinpeDriver$` **assuming `D:` is your USB drive.**
->
-> </details>
+---
 
-### Method 1: Create a Bootable Windows Installation USB
+### Using Memory's [WIMUtil](https://github.com/memstechtips/WIMUtil) (Highly Preferred)
+
+To use **WIMUtil**, follow these steps to launch PowerShell as an Administrator and run the installation script:
+
+1. **Open PowerShell as Administrator:**
+   - **Windows 10/11**: Right-click on the **Start** button and select **Windows PowerShell (Admin)** or **Windows Terminal (Admin)**. </br> PowerShell will open in a new window.
+
+2. **Confirm Administrator Privileges**: 
+   - If prompted by the User Account Control (UAC), click **Yes** to allow PowerShell to run as an administrator.
+
+3. **Paste and Run the Command**:
+   - Copy the following command:
+     ```powershell
+     irm "https://github.com/memstechtips/WIMUtil/raw/main/src/WIMUtil.ps1" | iex
+     ```
+   - To paste into PowerShell, **Right-Click** or press **Ctrl + V** in the PowerShell or Terminal window. </br> This should automatically paste your copied command.
+   - Press **Enter** to execute the command.
+
+Once launched, **WIMUtil** guides you through a wizard:
+
+1. **Select or Download Windows ISO**
+2. **Add Latest UnattendedWinstall Answer File Automatically**
+3. **Extract and Add Current Device Drivers to Installation Media**
+4. **Create New ISO with Customizations Included**
+5. **Create a Bootable USB Flash Drive with [Ventoy](https://github.com/ventoy/Ventoy)**
+6. **Copy the New ISO File to the Ventoy Flash Drive**
+7. **Boot from the USB flash drive, choose your ISO & Install Windows**
+
+For more info, check out the official [WIMUtil](https://github.com/memstechtips/WIMUtil) GitHub Repo.
+
+---
+
+### Old Methods
+#### Method 1: Create a Bootable Windows Installation USB
 
 - [Video Tutorial](https://youtu.be/pDEZDD_gEbo)
 
@@ -144,7 +162,7 @@ To use an answer file, include `autounattend.xml` at the root of your Windows In
 
 </details>
 
-### Method 2: Create a Custom ISO File
+#### Method 2: Create a Custom ISO File
 
 - [Video Tutorial](https://youtu.be/pDEZDD_gEbo?si=ChEGghEOLCyLSnp7&t=1117)
 
@@ -169,7 +187,7 @@ To use an answer file, include `autounattend.xml` at the root of your Windows In
 
 </details>
 
-### Method 3: Use Ventoy Auto Install Plugin
+#### Method 3: Use Ventoy Auto Install Plugin
 
 - [Video Tutorial](https://youtu.be/4AGZQJTyCOs)
 
@@ -204,7 +222,7 @@ To use an answer file, include `autounattend.xml` at the root of your Windows In
 
 ### How can I apply these settings to an existing Windows installation?
 
-- Run the `UWScript.ps1` file or use the [Chris Titus Tech Windows Utility](https://github.com/ChrisTitusTech/winutil) ([Video](https://youtu.be/pldFPTnOCGM)).
+- Run the [`UWScript.ps1`](https://github.com/memstechtips/UnattendedWinstall/blob/main/UWScript.ps1) file or use the [Chris Titus Tech Windows Utility](https://github.com/ChrisTitusTech/winutil) ([Video](https://youtu.be/pldFPTnOCGM)).
 
 ### Can this answer file be used for an in-place upgrade?
 
@@ -230,3 +248,45 @@ To use an answer file, include `autounattend.xml` at the root of your Windows In
   After installation, you should be able to connect to the internet.
 
 </details>
+
+### How can I access the previous "IoT-LTSC-Like," "Standard," and "Core" versions of the file(s)?
+
+  - You still have access to the previous files here: [Version 1.0.0 Release](https://github.com/memstechtips/UnattendedWinstall/releases/tag/v1.0.0).
+
+  > [!NOTE]  
+  > You need to download the `Source Code.zip` file. Once extracted, you’ll have access to all the previous v1.0.0 files.
+
+### Why isn't Microsoft Edge Uninstalled?
+
+<details>
+  <summary>Click to Show Explanation</summary>
+
+  I spent a lot of time trying to find a way to uninstall Microsoft Edge during Windows installation. However, it was challenging because of differences between Windows 10 22H2 and Windows 11 24H2. My goal is to use Microsoft’s supported uninstall methods, and I plan to add an easy Edge removal option in future releases.
+
+  In the meantime, if you wish to remove Edge after Windows installation, consider using [this script by FR33THY](https://github.com/FR33THYFR33THY/Ultimate-Windows-Optimization-Guide/blob/main/6%20Windows/14%20Edge.ps1). FR33THY’s *Ultimate Windows Optimization Guide* was a major inspiration for version 2.0.0 of this project, and I highly recommend exploring it for additional Windows optimization tips.
+
+</details>
+
+### How can I add my own Registry Tweaks to v2.0.0 of the `autounattend.xml` file?
+
+<details>
+  <summary>Click to Show Instructions</summary>
+
+  You can also still add your own registry entries to the v2.0.0 file, and it is actually easier if you understand where to add it. I'll give a brief explanation.
+
+  For registry entries that apply to the local machine, i.e., `HKEY_LOCAL_MACHINE` registry keys, you can find the `function SetRecommendedHKLMRegistry` in the `autounattend.xml` file, see here: https://github.com/memstechtips/UnattendedWinstall/blob/93305192ed6d64e0f5b98a89f447927480285354/autounattend.xml#L1981
+
+  and then add whatever registry entries you want to add in `.reg` format, like the rest of the entries are set, and just make sure you add it before the `"@` to make it part of the `.reg` file that will be generated, see here: https://github.com/memstechtips/UnattendedWinstall/blob/93305192ed6d64e0f5b98a89f447927480285354/autounattend.xml#L3412
+
+  and it will then be applied to the registry.
+
+  Similarly, if you have `HKEY_CURRENT_USER` registry keys, you can add those to the `User Customization.ps1` file in the same way as explained above, starting here:
+  https://github.com/memstechtips/UnattendedWinstall/blob/93305192ed6d64e0f5b98a89f447927480285354/autounattend.xml#L3912
+  so below the `Windows Registry Editor Version 5.00` and then ending before the `"@` here: https://github.com/memstechtips/UnattendedWinstall/blob/93305192ed6d64e0f5b98a89f447927480285354/autounattend.xml#L4423
+
+  > **Note**  
+  > The above links might not take you to the correct lines of code once new versions of the file are released, but it does take you to the correct lines on v2.0.0.
+
+</details>
+
+
